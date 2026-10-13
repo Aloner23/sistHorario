@@ -4,7 +4,7 @@
 
 Le das profesores, materias, salones, grupos y quién imparte qué; te devuelve un horario semanal que **nunca** empalma a un profesor, un salón o un grupo, respeta laboratorios vs. aulas y la disponibilidad de cada docente, y además **minimiza huecos** y respeta el **turno preferido** de cada profesor. Si no hay solución, te dice por qué.
 
-> **English summary.** Horarios API v2 is a FastAPI service that builds weekly school timetables with Google OR-Tools CP-SAT. Hard constraints (no teacher/room/group double-booking, room type, teacher availability, weekly hours, contiguous daily blocks) are always satisfied; soft constraints (idle gaps, preferred shift) are minimized. Infeasible inputs return human-readable diagnostics. Includes a dependency-free web UI, OpenAPI docs, a backtracking fallback solver, 41 pytest tests, Docker and Vercel configs. It is the v2 rewrite of my earlier Django project [sistHorarios](https://github.com/Aloner23/sistHorarios).
+> **English summary.** Horarios API v2 is a FastAPI service that builds weekly school timetables with Google OR-Tools CP-SAT. Hard constraints (no teacher/room/group double-booking, room type, teacher availability, weekly hours, contiguous daily blocks) are always satisfied; soft constraints (idle gaps, preferred shift) are minimized. Infeasible inputs return human-readable diagnostics. Includes a dependency-free web UI, OpenAPI docs, a backtracking fallback solver, 43 pytest tests, Docker and Vercel configs. It is the v2 rewrite of my earlier Django project [sistHorarios](https://github.com/Aloner23/sistHorarios).
 
 ![Vista por grupo](docs/screenshots/frontend-grupos.png)
 
@@ -14,14 +14,16 @@ Le das profesores, materias, salones, grupos y quién imparte qué; te devuelve 
 
 Este proyecto es la **v2 de mi generador de horarios**. La v1, [sistHorarios](https://github.com/Aloner23/sistHorarios), era una app Django con MySQL donde se capturaban profesores, materias y salones, y un algoritmo voraz asignaba clases recorriendo bloques por preferencia (mañana/tarde/noche) y editando cadenas de texto como `"0-10,11-20,21-30,"` dentro de la tabla de salones.
 
-| | v1 · sistHorarios | v2 · Horarios API |
+| | v1 · sistHorarios (versión original, 2023) | v2 · Horarios API |
 |---|---|---|
 | Arquitectura | Django + plantillas HTML, acoplado a MySQL | API REST sin estado (FastAPI) + UI estática |
 | Algoritmo | Voraz: asigna en orden, sin retroceso | CP-SAT: modelo de restricciones con objetivo; respaldo con backtracking |
 | Garantías | Podía dejar materias sin asignar o con empalmes | Toda restricción dura se cumple, y un verificador independiente lo comprueba en cada respuesta |
-| Infactibilidad | Falla silenciosa | Diagnósticos con código y explicación |
+| Infactibilidad | Error `UnboundLocalError` sin explicación | Diagnósticos con código y explicación |
 | Datos | SQL construido con `format()` | Entrada validada con Pydantic v2 (tipos, rangos, referencias cruzadas) |
-| Calidad | Sin pruebas | 41 pruebas, ruff, CI en GitHub Actions |
+| Calidad | Sin pruebas | 43 pruebas, ruff, CI en GitHub Actions |
+
+La tabla compara con el código original de 2023; la v1 también se modernizó después (pruebas, CI y reporte de clases sin asignar), pero sigue siendo un algoritmo voraz.
 
 Se conserva el dominio original: claves de materia tipo `COM11101`, salones tipo `LI-Pace`, carrera + semestre, preferencia de turno y el tipo de salón (aula / laboratorio).
 
@@ -172,7 +174,7 @@ Abre <http://localhost:8000> para la interfaz y <http://localhost:8000/docs> par
 ## Pruebas
 
 ```bash
-pytest          # 41 pruebas
+pytest          # 43 pruebas
 ruff check . && ruff format --check .
 ```
 

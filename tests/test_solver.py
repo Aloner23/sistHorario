@@ -19,7 +19,21 @@ def _revisar_restricciones(data: dict, r) -> None:
     profes = {p["id"]: p for p in data["profesores"]}
     materias = {m["clave"]: m for m in data["materias"]}
     salones = {s["id"]: s for s in data["salones"]}
+    grupos = {g["id"]: g for g in data["grupos"]}
     asign = {(a["grupo"], a["materia"]): a["profesor"] for a in data["asignaciones"]}
+    cfg = data.get("configuracion", {})
+    ventana = (cfg.get("hora_inicio", 7), cfg.get("hora_fin", 21))
+    dias = cfg.get("dias", ["lun", "mar", "mie", "jue", "vie"])
+
+    por_dia = defaultdict(int)
+    for s in r.horario:
+        assert s.dia in dias, f"día fuera de configuración: {s}"
+        assert ventana[0] <= s.inicio < s.fin <= ventana[1], f"fuera de la ventana diaria: {s}"
+        cap, alumnos = salones[s.salon].get("capacidad"), grupos[s.grupo].get("alumnos")
+        assert cap is None or alumnos is None or cap >= alumnos, f"capacidad insuficiente: {s}"
+        por_dia[(s.grupo, s.materia, s.dia)] += 1
+        assert s.fin - s.inicio <= materias[s.materia].get("max_horas_dia", 2), f"máx. horas por día: {s}"
+    assert all(n == 1 for n in por_dia.values()), "una materia debe ser un único bloque por día"
 
     prof_h, salon_h, grupo_h = set(), set(), set()
     horas = defaultdict(int)
@@ -156,3 +170,22 @@ def test_verificador_detecta_violaciones(demo_dict):
     lab = next(x for x in r.horario if x.salon.startswith("LI"))
     otra = [x if x is not lab else lab.model_copy(update={"salon": "A-101"}) for x in r.horario]
     assert any("asignada a A-101" in x for x in verificar(p, otra).violaciones)
+
+
+@pytest.mark.parametrize("motor", MOTORES)
+def test_capacidad_obliga_a_usar_el_salon_grande(motor):
+    # A-chico aparece primero pero no cabe el grupo (40 alumnos > 20 lugares).
+    data = mini(
+        grupos=[{"id": "G1", "carrera": "C", "semestre": 1, "alumnos": 40}],
+        materias=[{"clave": "M1", "nombre": "Mate", "horas_semanales": 6, "tipo": "aula"}],
+        salones=[
+            {"id": "A-chico", "tipo": "aula", "capacidad": 20},
+            {"id": "A-grande", "tipo": "aula", "capacidad": 45},
+        ],
+        asignaciones=[{"grupo": "G1", "materia": "M1", "profesor": "P1"}],
+        configuracion={"dias": ["lun", "mar", "mie"], "hora_inicio": 8, "hora_fin": 12},
+    )
+    r = resolver(solicitud(data, motor))
+    assert r.estado in (Estado.optimo, Estado.factible)
+    assert {s.salon for s in r.horario} == {"A-grande"}
+    _revisar_restricciones(data, r)
