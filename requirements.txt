@@ -1,0 +1,5 @@
+# Dependencias de ejecución (Vercel y Docker las leen de aquí).
+fastapi>=0.115,<1
+pydantic>=2.7,<3
+uvicorn[standard]>=0.30
+ortools>=9.10
