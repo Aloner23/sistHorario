@@ -109,7 +109,7 @@ function renderGrid() {
   const grid = document.createElement("div");
   grid.className = "grid";
   grid.style.gridTemplateColumns = `64px repeat(${cfg.dias.length}, 1fr)`;
-  grid.style.gridTemplateRows = `auto repeat(${horas.length}, minmax(34px, auto))`;
+  grid.style.gridTemplateRows = `auto repeat(${horas.length}, 46px)`;
   grid.innerHTML = `<div class="h"></div>` + cfg.dias.map((d) => `<div class="h">${DIAS[d] || d}</div>`).join("");
   horas.forEach((h, i) => {
     const t = document.createElement("div");
@@ -136,7 +136,10 @@ function renderGrid() {
     const detalle = state.view === "grupo"
       ? [profes[s.profesor].nombre, s.salon]
       : state.view === "profesor" ? [s.grupo, s.salon] : [s.grupo, profes[s.profesor].nombre];
-    b.innerHTML = `<b>${esc(m.nombre)}</b><span>${s.inicio}:00–${s.fin}:00 · ${esc(detalle[1])}</span><span>${esc(detalle[0])}</span>`;
+    const hora = `${s.inicio}:00–${s.fin}:00`;
+    b.innerHTML = s.fin - s.inicio > 1
+      ? `<b>${esc(m.nombre)}</b><span>${hora} · ${esc(detalle[1])}</span><span>${esc(detalle[0])}</span>`
+      : `<b>${esc(m.nombre)}</b><span>${hora} · ${esc(detalle[1])} · ${esc(detalle[0])}</span>`;
     b.title = `${m.clave} · ${m.nombre}\n${s.grupo} · ${profes[s.profesor].nombre} · ${s.salon}`;
     grid.appendChild(b);
   }
