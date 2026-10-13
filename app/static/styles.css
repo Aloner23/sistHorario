@@ -87,10 +87,10 @@ textarea { width: 100%; min-height: 280px; margin-top: 14px; padding: 12px; bord
   padding: 8px 4px; border-bottom: 1px solid var(--line); text-transform: uppercase; letter-spacing: .04em; }
 .grid .t { font-size: 12px; color: var(--muted); text-align: right; padding: 0 8px; border-top: 1px solid var(--line);
   font-variant-numeric: tabular-nums; display: flex; align-items: flex-start; justify-content: flex-end; padding-top: 4px; }
-.grid .c { border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 34px; }
-.blk { margin: 3px; border-radius: 8px; padding: 6px 8px; font-size: 12px; line-height: 1.3; overflow: hidden;
+.grid .c { border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.blk { margin: 3px; border-radius: 8px; padding: 5px 8px; min-height: 0; font-size: 12px; line-height: 1.3; overflow: hidden;
   border-left: 4px solid var(--c); background: color-mix(in srgb, var(--c) 16%, var(--panel)); }
-.blk b { display: block; font-size: 12.5px; }
+.blk b { display: block; font-size: 12.5px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .blk span { color: var(--muted); display: block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; font-size: 12.5px; color: var(--muted); }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--c); margin-right: 6px; }
