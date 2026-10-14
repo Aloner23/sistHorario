@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horarios API v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22"><rect x="3" y="4" width="18" height="17" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="7" y="12" width="4" height="3" rx="1" fill="currentColor"/><rect x="13" y="15" width="4" height="3" rx="1" fill="currentColor"/></svg>
+    </span>
+    <div>
+      <h1>Horarios API <span class="tag">v2</span></h1>
+      <p class="sub">Generador de horarios con programación por restricciones</p>
+    </div>
+  </div>
+  <nav class="links">
+    <a href="/docs">Docs OpenAPI</a>
+    <a href="https://github.com/Aloner23/sistHorarios" rel="noopener">v1 · sistHorarios</a>
+  </nav>
+</header>
+
+<main>
+  <section class="panel controls">
+    <div class="row">
+      <button id="btn-demo" class="btn ghost">Cargar demo</button>
+      <label class="select">Motor
+        <select id="motor">
+          <option value="auto">auto</option>
+          <option value="cpsat">CP-SAT</option>
+          <option value="heuristico">heurístico</option>
+        </select>
+      </label>
+      <button id="btn-solve" class="btn primary">Resolver horario</button>
+      <button id="btn-toggle" class="btn ghost small">Ver / editar JSON</button>
+      <span id="status" class="status" role="status"></span>
+    </div>
+    <textarea id="input" spellcheck="false" hidden aria-label="Entrada JSON"></textarea>
+  </section>
+
+  <section id="metrics" class="metrics" hidden></section>
+  <section id="diags" class="panel diags" hidden></section>
+
+  <section id="result" class="panel" hidden>
+    <div class="row between">
+      <div class="tabs" role="tablist">
+        <button data-view="grupo" class="tab active">Grupos</button>
+        <button data-view="profesor" class="tab">Profesores</button>
+        <button data-view="salon" class="tab">Salones</button>
+      </div>
+      <div id="chips" class="chips"></div>
+    </div>
+    <div id="grid" class="grid-wrap"></div>
+    <div id="legend" class="legend"></div>
+  </section>
+</main>
+
+<footer>Hecho por <a href="https://github.com/Aloner23">Aloner23</a> · FastAPI + OR-Tools CP-SAT · MIT</footer>
+<script src="/static/app.js"></script>
+</body>
+</html>

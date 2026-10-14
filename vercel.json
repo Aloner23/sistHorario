@@ -1,14 +1,10 @@
 {
-  "builds": [
-    {
-      "src": "vercel_app/wsgi.py",
-      "use": "@vercel/python"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "app/**",
+      "maxDuration": 30
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "vercel_app/wsgi.py"
-    }
-  ]
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }

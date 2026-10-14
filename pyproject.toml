@@ -1,0 +1,23 @@
+[project]
+name = "horarios-api"
+version = "2.0.0"
+description = "API REST y solucionador CP-SAT para generar horarios escolares (v2 de sistHorarios)."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Carlos (Aloner23)" }]
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]  # acentos y signos en español
+
+[tool.ruff.lint.per-file-ignores]
+"app/demo.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
