@@ -1,5 +1,13 @@
 # Horarios API v2
 
+**Versión 2 · API de optimización de horarios**
+
+[Inicio rápido](#inicio-rápido) · [API](#api) · [Solucionador](#cómo-funciona-el-solucionador) · [Pruebas](#pruebas) · [Comparar con la versión Django](#de-sisthorarios-a-v2)
+
+[![CI](https://github.com/Aloner23/sistHorario/actions/workflows/ci.yml/badge.svg)](https://github.com/Aloner23/sistHorario/actions/workflows/ci.yml)
+
+**Para evaluarlo:** inicia la aplicación localmente, abre `/docs`, consulta `GET /v1/examples/demo` y envía ese JSON a `POST /v1/schedules/solve`. Revisa el horario, los diagnósticos y `verificacion.valido`. También hay interfaz web en `/`.
+
 **Generador de horarios escolares como servicio: API REST + solucionador por programación con restricciones (OR-Tools CP-SAT).**
 
 Le das profesores, materias, salones, grupos y quién imparte qué; te devuelve un horario semanal que **nunca** empalma a un profesor, un salón o un grupo, respeta laboratorios vs. aulas y la disponibilidad de cada docente, y además **minimiza huecos** y respeta el **turno preferido** de cada profesor. Si no hay solución, te dice por qué.
@@ -194,6 +202,8 @@ La CI (`.github/workflows/ci.yml`) corre ruff y pytest en cada push a `main` y e
 docker build -t horarios-api .
 docker run -p 8000:8000 horarios-api
 ```
+
+**Estado de la demo alojada.** La evaluación está disponible mediante el inicio local o Docker. El enlace de Vercel anterior no corresponde a la aplicación actual; no se presenta como demo funcional hasta verificar `/`, `/health`, `/docs` y la generación de un horario.
 
 **Vercel.** `vercel.json` envía todas las rutas a `api/index.py`, que expone la app ASGI. OR-Tools junto con sus dependencias (numpy, pandas) es pesado; si se supera el límite de tamaño de la función, se puede quitar `ortools` de `requirements.txt` y la API usará automáticamente el motor heurístico (`/health` reporta `"cpsat": false`). Para cargas reales conviene más un contenedor (Docker en Render, Fly.io, Cloud Run, etc.).
 
