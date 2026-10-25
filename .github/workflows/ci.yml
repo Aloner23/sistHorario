@@ -23,3 +23,8 @@ jobs:
         run: ruff format --check .
       - name: Pruebas
         run: pytest
+      - name: Verificar dependencias del despliegue en entorno limpio
+        run: |
+          pip install uv
+          uv sync --no-dev
+          .venv/bin/python -c "from api.index import app; from app.solver import cpsat_disponible; assert app.title == 'Horarios API'; assert cpsat_disponible()"

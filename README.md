@@ -205,6 +205,8 @@ docker run -p 8000:8000 horarios-api
 
 **Estado de la demo alojada.** La evaluación está disponible mediante el inicio local o Docker. El enlace de Vercel anterior no corresponde a la aplicación actual; no se presenta como demo funcional hasta verificar `/`, `/health`, `/docs` y la generación de un horario.
 
+Las dependencias de ejecución también se declaran en `pyproject.toml`: el constructor de Python de Vercel utiliza ese manifiesto cuando está presente. La CI comprueba que una instalación limpia con `uv sync --no-dev` permite importar la aplicación y cargar OR-Tools. `requirements.txt` conserva la instalación mediante pip para desarrollo y Docker; ambos manifiestos deben mantenerse alineados.
+
 **Vercel.** `vercel.json` envía todas las rutas a `api/index.py`, que expone la app ASGI. OR-Tools junto con sus dependencias (numpy, pandas) es pesado; si se supera el límite de tamaño de la función, se puede quitar `ortools` de `requirements.txt` y la API usará automáticamente el motor heurístico (`/health` reporta `"cpsat": false`). Para cargas reales conviene más un contenedor (Docker en Render, Fly.io, Cloud Run, etc.).
 
 ## Estructura
